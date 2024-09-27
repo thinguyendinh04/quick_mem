@@ -11,7 +11,6 @@ data class ColorModel(
 ) {
 
 
-    // list default colors
     companion object {
         val defaultColors = listOf(
             ColorModel(

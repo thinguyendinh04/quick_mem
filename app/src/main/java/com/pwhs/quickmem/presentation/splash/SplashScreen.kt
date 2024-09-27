@@ -49,7 +49,6 @@ fun SplashScreen(
                     }
                 }
             }
-
             is SplashUiState.NotFirstRun -> {
                 navigator.navigate(WelcomeScreenDestination) {
                     popUpTo(WelcomeScreenDestination) {
