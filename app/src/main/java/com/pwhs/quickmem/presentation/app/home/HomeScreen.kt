@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,8 +71,19 @@ fun HomeUI(
     onDetailFolder: () -> Unit = {},
 
     ) {
-    val scrollState = rememberScrollState()
-    val hasData = viewModel.hasData.value
+    val state by viewModel.state
+    val coroutineScope = rememberCoroutineScope()
+    val action = viewModel.action.collectAsState(initial = null)
+
+    LaunchedEffect(action.value) {
+        action.value?.let {
+            when (it) {
+                is HomeUIAction.NavigateToSearch -> onNavigationSearch()
+                is HomeUIAction.OpenFreeTrialPage -> onOpenFreeTrailClick()
+            }
+        }
+    }
+
 
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -86,7 +101,7 @@ fun HomeUI(
                 onOpenFreeTrailClick = onOpenFreeTrailClick,
                 onNavigationIconClick = onNavigationSearch
             )
-            if (!hasData) {
+            if (state.hasData) {
                 SetsSections(
                     modifier = Modifier,
                     onSaveSets = onSaveSets,
